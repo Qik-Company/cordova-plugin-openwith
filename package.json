@@ -1,17 +1,13 @@
 {
-  "name": "cordova-plugin-openwith",
+  "name": "cordova-plugin-openwith-v2",
   "version": "1.0.4",
   "description": "Cordova \"Open With\" plugin for iOS and Android",
   "cordova": {
-    "id": "cordova-plugin-openwith",
+    "id": "cordova-plugin-openwith-v2",
     "platforms": [
       "android",
       "ios"
     ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/missive/cordova-plugin-openwith.git"
   },
   "keywords": [
     "ecosystem:cordova",
@@ -24,11 +20,6 @@
   ],
   "author": "Jean-Christophe Hoelt <hoelt@fovea.cc>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/missive/cordova-plugin-openwith/issues"
-  },
-  "homepage": "https://github.com/missive/cordova-plugin-openwith",
-  "# Dependencies required by the hooks": "",
   "dependencies": {
     "file-system": "^2.2.2",
     "path": "^0.12.7",
