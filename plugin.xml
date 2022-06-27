@@ -23,12 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
 
-<plugin
-  xmlns="http://apache.org/cordova/ns/plugins/1.0"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  id="cordova-plugin-openwith"
-  version="1.0.0"
->
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-openwith" version="1.0.4">
   <name>OpenWith</name>
   <description>Cordova "Open With" plugin for Cordova</description>
   <engines>
@@ -47,9 +43,6 @@ SOFTWARE.
     <js-module src="www/openwith.js" name="openwith">
       <clobbers target="cordova.openwith" />
     </js-module>
-
-    <!-- Cordova 2.2 -->
-    <plugins-plist key="OpenWith" string="OpenWith" />
 
     <!-- Cordova 2.5+ -->
     <config-file target="config.xml" parent="/*">
@@ -108,11 +101,7 @@ SOFTWARE.
     <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
       <intent-filter>
         <!-- See https://developer.android.com/guide/topics/manifest/data-element.html -->
-        <data android:mimeType="audio/*" />
-        <data android:mimeType="application/*" />
-        <data android:mimeType="video/*" />
-        <data android:mimeType="image/*" />
-        <data android:mimeType="text/*" />
+        <data android:mimeType="*/*" />
         <action android:name="android.intent.action.SEND" />
         <action android:name="android.intent.action.SEND_MULTIPLE" />
         <category android:name="android.intent.category.DEFAULT" />
