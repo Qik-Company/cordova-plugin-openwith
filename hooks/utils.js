@@ -1,45 +1,59 @@
 const fs = require('fs');
 const path = require('path');
 
-const PLUGIN_ID = 'cordova-plugin-openwith';
+const PLUGIN_ID = 'cordova-plugin-openwith-v2';
 const BUNDLE_SUFFIX = '.shareextension';
 
 function getPreferences(context, projectName) {
   var configXml = getConfigXml(context);
   var plist = projectPlistJson(context, projectName);
 
-  return [{
-    key: '__DISPLAY_NAME__',
-    value: getCordovaParameter(configXml, 'DISPLAY_NAME') || projectName
-  }, {
-    key: '__BUNDLE_IDENTIFIER__',
-    value: getCordovaParameter(configXml, 'IOS_BUNDLE_IDENTIFIER') + BUNDLE_SUFFIX
-  }, {
-    key: '__BUNDLE_SHORT_VERSION_STRING__',
-    value: plist.CFBundleShortVersionString
-  }, {
-    key: '__BUNDLE_VERSION__',
-    value: plist.CFBundleVersion
-  }, {
-    key: '__URL_SCHEME__',
-    value: getCordovaParameter(configXml, 'IOS_URL_SCHEME')
-  }];
+  return [
+    {
+      key: '__DISPLAY_NAME__',
+      value: getCordovaParameter(configXml, 'DISPLAY_NAME') || projectName,
+    },
+    {
+      key: '__BUNDLE_IDENTIFIER__',
+      value:
+        getCordovaParameter(configXml, 'IOS_BUNDLE_IDENTIFIER') + BUNDLE_SUFFIX,
+    },
+    {
+      key: '__BUNDLE_SHORT_VERSION_STRING__',
+      value: plist.CFBundleShortVersionString,
+    },
+    {
+      key: '__BUNDLE_VERSION__',
+      value: plist.CFBundleVersion,
+    },
+    {
+      key: '__URL_SCHEME__',
+      value: getCordovaParameter(configXml, 'IOS_URL_SCHEME'),
+    },
+  ];
 }
 
 function getConfigXml(context) {
-  var configXml = fs.readFileSync(path.join(context.opts.projectRoot, 'config.xml'), 'utf-8');
+  var configXml = fs.readFileSync(
+    path.join(context.opts.projectRoot, 'config.xml'),
+    'utf-8'
+  );
 
   if (configXml) {
     configXml = configXml.substring(configXml.indexOf('<'));
   }
 
-  return configXml
+  return configXml;
 }
 
 function projectPlistJson(context, projectName) {
   var plist = require('plist');
 
-  var plistPath = path.join(iosFolder(context), projectName, projectName + '-Info.plist');
+  var plistPath = path.join(
+    iosFolder(context),
+    projectName,
+    projectName + '-Info.plist'
+  );
   return plist.parse(fs.readFileSync(plistPath, 'utf8'));
 }
 
@@ -51,7 +65,7 @@ function iosFolder(context) {
 
 function getCordovaParameter(configXml, variableName) {
   var variable;
-  var arg = process.argv.filter(function(arg) {
+  var arg = process.argv.filter(function (arg) {
     return arg.indexOf(variableName + '=') == 0;
   });
 
@@ -65,7 +79,9 @@ function getCordovaParameter(configXml, variableName) {
 }
 
 function getPreferenceValue(configXml, name) {
-  var value = configXml.match(new RegExp('name="' + name + '" value="(.*?)"', "i"));
+  var value = configXml.match(
+    new RegExp('name="' + name + '" value="(.*?)"', 'i')
+  );
 
   if (value && value[1]) {
     return value[1];
@@ -76,13 +92,13 @@ function getPreferenceValue(configXml, name) {
 
 // Determine the full path to the app's xcode project file.
 function findXCodeproject(context, callback) {
-  fs.readdir(iosFolder(context), function(err, data) {
+  fs.readdir(iosFolder(context), function (err, data) {
     var projectFolder;
     var projectName;
 
     // Find the project folder by looking for *.xcodeproj
     if (data && data.length) {
-      data.forEach(function(folder) {
+      data.forEach(function (folder) {
         if (folder.match(/\.xcodeproj$/)) {
           projectFolder = path.join(iosFolder(context), folder);
           projectName = path.basename(folder, '.xcodeproj');
@@ -91,7 +107,9 @@ function findXCodeproject(context, callback) {
     }
 
     if (!projectFolder || !projectName) {
-      throw redError('Could not find an .xcodeproj folder in: ' + iosFolder(context));
+      throw redError(
+        'Could not find an .xcodeproj folder in: ' + iosFolder(context)
+      );
     }
 
     if (err) {
@@ -106,9 +124,9 @@ function replacePreferencesInFile(filePath, preferences) {
   var content = fs.readFileSync(filePath, 'utf8');
 
   for (var i = 0; i < preferences.length; i++) {
-      var pref = preferences[i];
-      var regexp = new RegExp(pref.key, "g");
-      content = content.replace(regexp, pref.value);
+    var pref = preferences[i];
+    var regexp = new RegExp(pref.key, 'g');
+    content = content.replace(regexp, pref.value);
   }
 
   fs.writeFileSync(filePath, content);
@@ -128,5 +146,6 @@ module.exports = {
   getPreferences,
   findXCodeproject,
   replacePreferencesInFile,
-  log, redError,
-}
+  log,
+  redError,
+};
