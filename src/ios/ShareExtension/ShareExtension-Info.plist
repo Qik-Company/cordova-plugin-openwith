@@ -5,11 +5,11 @@
         <key>CFBundleDevelopmentRegion</key>
         <string>en</string>
         <key>CFBundleDisplayName</key>
-        <string>__DISPLAY_NAME__</string>
+        <string>Qik Meeting</string>
         <key>CFBundleExecutable</key>
         <string>$(EXECUTABLE_NAME)</string>
         <key>CFBundleIdentifier</key>
-        <string>__BUNDLE_IDENTIFIER__</string>
+        <string>mt.qik.app.shareextension</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleName</key>
