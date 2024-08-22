@@ -25,26 +25,17 @@
             <key>NSExtensionAttributes</key>
             <dict>
                 <key>NSExtensionActivationRule</key>
-                <dict>
-                    <key>NSExtensionActivationUsesStrictMatching</key>
-                    <integer>0</integer>
-                    <key>NSExtensionActivationDictionaryVersion</key>
-                    <integer>2</integer>
-                    <key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
-                    <integer>10</integer>
-                    <key>NSExtensionActivationSupportsFileWithMaxCount</key>
-                    <integer>10</integer>
-                    <key>NSExtensionActivationSupportsImageWithMaxCount</key>
-                    <integer>10</integer>
-                    <key>NSExtensionActivationSupportsMovieWithMaxCount</key>
-                    <integer>5</integer>
-                    <key>NSExtensionActivationSupportsText</key>
-                    <true/>
-                    <key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-                    <integer>10</integer>
-                    <key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
-                    <integer>10</integer>
-                </dict>
+                <string>
+                    SUBQUERY (
+                        extensionItems,
+                        $extensionItem,
+                        SUBQUERY (
+                            $extensionItem.attachments,
+                            $attachment,
+                            ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.data"
+                        ).@count == $extensionItem.attachments.@count
+                    ).@count > 0
+                </string>
             </dict>
             <key>NSExtensionMainStoryboard</key>
             <string>MainInterface</string>

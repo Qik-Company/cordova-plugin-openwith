@@ -2,6 +2,7 @@
 #import <Social/Social.h>
 #import "ShareViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <Contacts/Contacts.h>
 
 @interface ShareViewController : SLComposeServiceViewController <UIAlertViewDelegate> {
   NSFileManager *_fileManager;
@@ -262,6 +263,43 @@
         if (remainingAttachments == 0) {
           [self sendResults:results];
         }
+      }];
+    }
+      
+    // vCard
+    else if ([itemProvider hasItemConformingToTypeIdentifier:@"public.vcard"]) {
+      [self debug:[NSString stringWithFormat:@"item provider = %@", itemProvider]];
+      [itemProvider loadItemForTypeIdentifier:@"public.vcard" options:nil completionHandler:^(id<NSSecureCoding> item, NSError *error) {
+          if (error) {
+              NSLog(@"Error loading vCard: %@", error.localizedDescription);
+              return;
+          }
+
+          if ([(NSObject*)item isKindOfClass:[NSData class]]) {
+              NSData *vCardData = (NSData *)item;
+              NSError *error = nil;
+              NSArray<CNContact *> *contacts = [CNContactVCardSerialization contactsWithData:vCardData error:&error];
+              if (error) {
+                  NSLog(@"Error parsing vCard data: %@", error.localizedDescription);
+                  return;
+              }
+              NSString *givenName = contacts[0].givenName;
+              NSURL *targetUrl = [[self.fileManager containerURLForSecurityApplicationGroupIdentifier:SHAREEXT_GROUP_IDENTIFIER] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.vcf", [[NSUUID UUID] UUIDString]]];
+              [vCardData writeToFile:[targetUrl.absoluteString substringFromIndex:6] atomically:YES];
+              NSDictionary *dict = @{
+                @"fileUrl" : targetUrl.absoluteString,
+                @"uti"  : @"public.vcard",
+                @"utis" : itemProvider.registeredTypeIdentifiers,
+                @"name" : givenName,
+                @"type" : @"text/x-vcard"
+              };
+              
+              [items addObject:dict];
+              --remainingAttachments;
+              if (remainingAttachments == 0) {
+                [self sendResults:results];
+              }
+          }
       }];
     }
 

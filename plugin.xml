@@ -24,7 +24,7 @@ SOFTWARE.
 -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-openwith-v2" version="1.0.5">
+  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-openwith-v2" version="1.0.6">
   <name>OpenWith</name>
   <description>Cordova "Open With" plugin for Cordova</description>
   <engines>
